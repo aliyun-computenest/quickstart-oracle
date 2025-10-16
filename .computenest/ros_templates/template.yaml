@@ -234,8 +234,8 @@ Parameters:
     Type: String
     AllowedPattern: '^[a-zA-Z0-9-\(\)\`\~\!\@\#\$\%\^\&\*\_\-\+\=\|\{\}\[\]\:\;\<\>\,\.\?\/]*$'
     Label:
-      en: COUCHDB PASSWORD
-      zh-cn: COUCHDB 密码
+      en: ORACLE DB PASSWORD
+      zh-cn: ORACLE DB 密码
     ConstraintDescription:
       en: Length 8-30, must contain three(Capital letters, lowercase letters, numbers, ()`~!@#$%^&*_-+=|{}[]:;'<>,.?/ Special symbol in)
       zh-cn: 长度8-30，必须包含三项（大写字母、小写字母、数字、 ()`~!@#$%^&*_-+=|{}[]:;'<>,.?/ 中的特殊符号）
@@ -371,12 +371,35 @@ Resources:
             echo `blkid $parted_disk_device | awk '{print $2}' | sed 's/\\\"//g'` $mount_point ext4 defaults 0 0 >> /etc/fstab
             mount -a
 
-            docker run -d --name oracle --restart always -p 1521:1521 -v /mnt/data/oradata:/opt/oracle/oradata container-registry.oracle.com/database/free:latest
+            docker run -d --name oracle --restart always -p 1521:1521 container-registry.oracle.com/database/free:latest
 
-            docker exec -it oracle ./setPassword.sh ${ORACLEDB_PASSWORD}
+            # 获取容器ID
+            CONTAINER_ID=$(docker ps -q)
+
+            # 检查容器健康状态
+            check_health_status() {
+              STATUS=$(docker inspect --format='{{.State.Health.Status}}' $CONTAINER_ID)
+
+              if [ "$STATUS" == "healthy" ]; then
+                echo "Container $SERVICE_NAME is healthy."
+                return 0
+              else
+                echo "Container $SERVICE_NAME status: $STATUS. Waiting..."
+                return 1
+              fi
+            }
+
+            # 循环检查健康状态，直到服务变为healthy
+            while true; do
+              if check_health_status; then
+                docker exec -i oracle ./setPassword.sh ${ORACLEDB_PASSWORD}
+                exit 0
+              fi
+              sleep 10
+            done
 
           - ORACLEDB_PASSWORD:
-              Ref: COUCHDB_PASSWORD
+              Ref: ORACLEDB_PASSWORD
 Outputs:
   OracleDB Addresses:
     Description:
@@ -412,6 +435,11 @@ Outputs:
               - Fn::GetAtt:
                   - InstanceGroup
                   - PrivateIps
+  DB_UserName:
+    Description:
+      zh-cn: OracleDB 用户名
+      en: OracleDB UserName
+    Value: SYSTEM
 Metadata:
   ALIYUN::ROS::Interface:
     ParameterGroups:
@@ -440,4 +468,3 @@ Metadata:
           - VSwitchCidrBlock
         Label:
           default: 可用区配置
-      

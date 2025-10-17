@@ -1,24 +1,106 @@
 Service:
-  RegionId: cn-hangzhou
   DeployType: ros
   DeployMetadata:
-    ServiceInstanceNameRule:
-      Prefix: oracle
     SupplierDeployMetadata:
+      DeployTimeout: 7200
       ArtifactRelation:
-        'centos_7_9_x64_20G_alibase_20240403.vhd':
-          ArtifactId: ${Artifact.EcsImage.ArtifactId}
-          ArtifactVersion: ${Artifact.EcsImage.ArtifactVersion}
+        centos_7_9_x64_20G_alibase_20240403.vhd:
+          ArtifactId: ${Artifact.Artifact_1.ArtifactId}
+          ArtifactVersion: ${Artifact.Artifact_1.ArtifactVersion}
+      SupplierTemplateConfigs:
+        - Name: 模板1
+          Url: ros_templates/template.yaml
+          PredefinedParameters: []
+          AllowedRegions:
+            - cn-qingdao
+            - cn-beijing
+            - cn-zhangjiakou
+            - cn-huhehaote
+            - cn-wulanchabu
+            - cn-hangzhou
+            - cn-shanghai
+            - cn-shenzhen
+            - cn-heyuan
+            - cn-guangzhou
+            - cn-wuhan-lr
+            - cn-chengdu
+            - cn-hongkong
+            - ap-northeast-1
+            - ap-northeast-2
+            - ap-southeast-1
+            - ap-southeast-3
+            - ap-southeast-6
+            - ap-southeast-5
+            - ap-southeast-7
+            - us-east-1
+            - us-west-1
+            - us-southeast-1
+            - na-south-1
+            - eu-west-1
+            - me-east-1
+            - me-central-1
+            - eu-central-1
     TemplateConfigs:
-      - Name: 单机版
-        Url: 'ros_templates/template.yaml'
+      - Name: 模板1
+        Url: ros_templates/template.yaml
+        AllowedRegions:
+          - cn-qingdao
+          - cn-beijing
+          - cn-zhangjiakou
+          - cn-huhehaote
+          - cn-wulanchabu
+          - cn-hangzhou
+          - cn-shanghai
+          - cn-shenzhen
+          - cn-heyuan
+          - cn-guangzhou
+          - cn-wuhan-lr
+          - cn-chengdu
+          - cn-hongkong
+          - ap-northeast-1
+          - ap-northeast-2
+          - ap-southeast-1
+          - ap-southeast-3
+          - ap-southeast-6
+          - ap-southeast-5
+          - ap-southeast-7
+          - us-east-1
+          - us-west-1
+          - us-southeast-1
+          - na-south-1
+          - eu-west-1
+          - me-east-1
+          - me-central-1
+          - eu-central-1
+        PredefinedParameters: []
+        ArchitectureDiagramUrl: 
+          https://service-info-private.oss-cn-hangzhou.aliyuncs.com/1853370294850618/architecture/7ab9e712-2661-4aaf-95c6-287223ccfc7a.jpg?Expires=1760777737&OSSAccessKeyId=LTAI5tCYphFhocJemeMWmXst&Signature=0baOehvfi57hDJetioZkRYpA4w0%3D
+        DeployScene: ECS
+        OutputConfigs:
+          - OutputKey: OracleDB Addresses
+            EnableWebProxy: true
+          - OutputKey: OracleDB Private Addresses
+            EnableWebProxy: true
+    NetworkMetadata:
+      EnablePrivateVpcConnection: false
+      EnableReversePrivateVpcConnection: false
+    ServiceInstanceNameRule:
+      UseDefaultValue: false
+  OperationMetadata:
+    SupportBackup: false
+    PrometheusConfigMap:
+      模板1:
+        EnablePrometheus: false
   ServiceType: private
   ServiceInfo:
     Locale: zh-CN
-    ShortDescription: oracle deploy
-    Image: 'resources/icons/service_logo.png'
+    ShortDescription: Oracle数据库是一种功能强大、可靠性高的关系型数据库管理系统，为企业提供了广泛的数据管理和处理能力。
+    Image: resources/icons/service_logo.png
+    Name: OracleDB社区版
+  ShareType: Public
+  ApprovalType: Manual
 Artifact:
-  EcsImage:
+  Artifact_1:
     ArtifactType: EcsImage
     ArtifactName: oracle
     Description: oracle

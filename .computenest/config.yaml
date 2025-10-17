@@ -73,8 +73,6 @@ Service:
           - me-central-1
           - eu-central-1
         PredefinedParameters: []
-        ArchitectureDiagramUrl: 
-          https://service-info-private.oss-cn-hangzhou.aliyuncs.com/1853370294850618/architecture/7ab9e712-2661-4aaf-95c6-287223ccfc7a.jpg?Expires=1760777737&OSSAccessKeyId=LTAI5tCYphFhocJemeMWmXst&Signature=0baOehvfi57hDJetioZkRYpA4w0%3D
         DeployScene: ECS
         OutputConfigs:
           - OutputKey: OracleDB Addresses
